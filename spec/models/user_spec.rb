@@ -29,7 +29,7 @@
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
 require "rails_helper"
-
+# rubocop:disable all
 RSpec.describe User, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end
