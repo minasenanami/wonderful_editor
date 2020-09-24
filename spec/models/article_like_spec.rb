@@ -19,7 +19,19 @@
 #  fk_rails_...  (user_id => users.id)
 #
 require "rails_helper"
-# rubocop:disable all
+
 RSpec.describe ArticleLike, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "ユーザーと記事が存在する時" do
+    let(:article_like) { build(:article_like) }
+    it "お気に入りできる" do
+      expect(article_like).to be_valid
+    end
+  end
+
+  context "ユーザーがログインしてない時" do
+    let(:article_like) { build(:article_like, user_id: nil) }
+    it "エラーが出る" do
+      expect(article_like).to be_invalid
+    end
+  end
 end

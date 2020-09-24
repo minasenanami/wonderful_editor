@@ -18,7 +18,27 @@
 #  fk_rails_...  (user_id => users.id)
 #
 require "rails_helper"
-# rubocop:disable all
+
 RSpec.describe Article, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "タイトルと本文が入力されている時" do
+    let(:article) { build(:article) }
+    it "記事が作成される" do
+      expect(article).to be_valid
+    end
+  end
+
+  context "タイトルしか入力されていない時" do
+    let(:article) { build(:article, body: nil) }
+    it "エラーする" do
+      expect(article).to be_invalid
+    end
+  end
+
+  context "本文しか入力していない時" do
+    let(:article) { build(:article, title: nil) }
+    it "エラーする" do
+      expect(article).to be_invalid
+      expect(article.errors.details[:title][0][:error]).to eq :blank
+    end
+  end
 end

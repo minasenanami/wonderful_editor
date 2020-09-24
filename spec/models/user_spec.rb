@@ -29,7 +29,36 @@
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
 require "rails_helper"
-# rubocop:disable all
+
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "必要な情報が揃っている場合" do
+    let(:user) { build(:user) }
+
+    it "ユーザーが作成される" do
+      expect(user).to be_valid
+    end
+  end
+
+  context "名前だけの入力だけの場合" do
+    let(:user) { build(:user, email: nil, password: nil) }
+    it "異常動作をする" do
+      expect(user).not_to be_valid
+      expect(user.errors.details[:email][0][:error]).to eq :blank
+      expect(user.errors.details[:password][0][:error]).to eq :blank
+    end
+  end
+
+  context "emailが無い場合" do
+    let(:user) { build(:user, email: nil) }
+    it "エラーが発生する" do
+      expect(user).to be_invalid
+    end
+  end
+
+  context "passwordが無い場合" do
+    let(:user) { build(:user, password: nil) }
+    it "エラーが発生する" do
+      expect(user).to be_invalid
+    end
+  end
 end
