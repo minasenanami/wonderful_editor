@@ -21,7 +21,26 @@
 #
 
 require "rails_helper"
-# rubocop:disable all
+
 RSpec.describe Comment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "コメントが入力されている時" do
+    let(:comment) { build(:comment) }
+    it "コメントが作成される" do
+      expect(comment).to be_valid
+    end
+  end
+
+  context "コメントが空の場合" do
+    let(:comment) { build(:comment, body: nil) }
+    it "コメントに失敗する" do
+      expect(comment).to be_invalid
+    end
+  end
+
+  context "userがログインしてない場合" do
+    let(:comment) { build(:comment, user_id: nil) }
+    it "コメントに失敗する" do
+      expect(comment).to be_invalid
+    end
+  end
 end

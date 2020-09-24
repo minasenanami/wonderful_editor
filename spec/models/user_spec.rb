@@ -31,21 +31,18 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-
   context "必要な情報が揃っている場合" do
     let(:user) { build(:user) }
 
-    it "ユーザーが作成される"do
+    it "ユーザーが作成される" do
       expect(user).to be_valid
     end
   end
 
   context "名前だけの入力だけの場合" do
     let(:user) { build(:user, email: nil, password: nil) }
-    fit "エラーが発生する" do
+    it "ユーザーの作成に失敗する" do
       expect(user).not_to be_valid
-      expect(user.errors.details[:email][0][:error]).to eq :blank
-      expect(user.errors.details[:password][0][:error]).to eq :blank
     end
   end
 
@@ -57,10 +54,9 @@ RSpec.describe User, type: :model do
   end
 
   context "passwordが無い場合" do
-    let(:user) {build(:user, password: nil) }
+    let(:user) { build(:user, password: nil) }
     it "エラーが発生する" do
       expect(user).to be_invalid
     end
   end
-
 end

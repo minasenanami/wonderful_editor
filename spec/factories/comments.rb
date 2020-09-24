@@ -21,5 +21,8 @@
 #
 FactoryBot.define do
   factory :comment do
+    body { Faker::Lorem.characters(number: Random.new.rand(1..30)) }
+    user
+    article
   end
 end
