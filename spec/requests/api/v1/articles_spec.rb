@@ -19,17 +19,17 @@ RSpec.describe "Api::V1::Articles", type: :request do
     end
   end
 
-  describe " GET /articles/:id " do
+  describe "GET /articles/:id" do
     subject { get(api_v1_article_path(article_id)) }
 
-    context " 指定した id の記事が存在する場合 " do
+    context "指定した id の記事が存在する場合" do
       let(:article_id) { article.id }
       let(:article) { create(:article) }
 
-      it " 指定した記事の値を取得できる " do
+      it "指定した記事の値を取得できる" do
         subject
         res = JSON.parse(response.body)
-        expect(response).to have_http_status(ok)
+        expect(response).to have_http_status(:ok)
         expect(res["id"]).to eq article.id
         expect(res["title"]).to eq article.title
         expect(res["body"]).to eq article.body
@@ -38,10 +38,10 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
 
-    context " 指定したidが存在しない時 " do
+    context "指定したidが存在しない時" do
       let(:article_id) { 1_000_000 }
 
-      it " 記事が見つからない " do
+      it "記事が見つからない" do
         expect { subject }.to raise_error ActiveRecord::RecordNotFound
       end
     end
