@@ -45,5 +45,51 @@ RSpec.describe "Api::V1::Articles", type: :request do
         expect { subject }.to raise_error ActiveRecord::RecordNotFound
       end
     end
+
+    describe "POST /articles" do
+      subject { post(api_v1_articles_path, params: params) }
+
+      let(:current_user) { create(:user) }
+      let(:params) { { article: attributes_for(:article) } }
+
+      # rubocop:disable all
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+
+      it "記事の作成ができる" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "PATCH /api/v1/articles/:id" do
+      subject { patch(api_v1_article_path(article.id), params: params) }
+
+      let(:params) { { article: attributes_for(:article) } }
+      let(:current_user) { create(:user) }
+
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+      # rubocop:enable all
+      context "自分の記事のを更新する時" do
+        let(:article) { create(:article, user: current_user) }
+        it "記事を更新できる" do
+          expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
+                                change { article.reload.body }.from(article.body).to(params[:article][:body])
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context "自分以外の記事を更新しようとした時" do
+        let(:other_user) { create(:user) }
+        let!(:article) { create(:article, user: other_user) }
+
+        it "更新に失敗する" do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
+                                change { Article.count }.by(0)
+        end
+      end
+    end
   end
 end
