@@ -37,7 +37,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     context "password が一致しない時" do
       let(:user) { create(:user) }
       let(:params) { attributes_for(:user, password: "naobo") }
-      fit "ログインできない" do
+      it "ログインできない" do
         subject
         res = JSON.parse(response.body)
         header = response.header
