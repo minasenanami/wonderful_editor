@@ -5,7 +5,11 @@ Rails.application.routes.draw do
   get "sign_up", to: "home#index"
   get "sign_in", to: "home#index"
   get "articles/new", to: "home#index"
+  get "articles/draft", to: "home#index"
+  get "articles/drafts/:id/edit", to: "home#index"
+  get "articles/:id/edit", to: "home#index"
   get "articles/:id", to: "home#index"
+  get "mypage", to: "home#index"
 
   namespace :api do
     namespace :v1 do
